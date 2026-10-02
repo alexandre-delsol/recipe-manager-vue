@@ -3,6 +3,7 @@ import type { MenuOption } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { NMenu } from 'naive-ui'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+
 const menuOptions: MenuOption[] = [
     {
         key: '/',
@@ -43,12 +44,24 @@ onUnmounted(() => {
 
 <template>
     <header class="w-full">
-        <nav class="mx-auto w-full max-w-7xl px-4">
-            <NMenu :mode="isMobile ? 'vertical' : 'horizontal'"   :value="route.path" 
-            @update:value="handleMenuUpdate"
-            :options="menuOptions" ></NMenu>
+        <nav class="mx-auto w-full max-w-7xl">
+            <NMenu class="w-full flex flex-col text-center sm:flex-row" :mode="isMobile ? 'vertical' : 'horizontal'"
+                :value="route.path" :options="menuOptions" @update:value="handleMenuUpdate" />
         </nav>
     </header>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.n-menu-item) {
+    flex: 1;
+}
+
+:deep(.n-menu-item-content--selected) {
+    background-color: #ffedd5;
+    color: #c2410c;
+}
+
+:deep(.n-menu-item-content:hover) {
+    background-color: #fff7ed;
+}
+</style>
