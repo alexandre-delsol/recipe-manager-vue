@@ -1,4 +1,3 @@
-```vue
 <script setup lang="ts">
 import type { MenuOption } from 'naive-ui'
 import { NMenu } from 'naive-ui'
@@ -91,4 +90,4 @@ onUnmounted(() => {
   flex: 1;
 }
 </style>
-```
+

@@ -1,46 +1,47 @@
 <script setup lang="ts">
 import RecipeCard from '@/components/RecipeCard.vue'
-import { searchRecipes } from '@/services/mealDB'
-import type { RecipeSummary } from '@/types/recipe'
-import { onMounted, ref } from 'vue'
+import RecipeSearch from '@/components/RecipeSearch.vue'
+import { useRecipeStore } from '@/stores/recipeStore'
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
-const recipes = ref<RecipeSummary[]>([])
-const errorMessage = ref<string | null>(null)
-const loading = ref(true)
+const recipeStore = useRecipeStore()
+const { searchState } = storeToRefs(recipeStore)
 
-async function loadRecipes() {
-    const result = await searchRecipes('chicken')
+const searchQuery = ref('')
 
-    recipes.value = result
+async function handleSearch(query: string) {
+  await recipeStore.searchRecipes(query)
 }
 
-onMounted(async () => {
-    try {
-        await loadRecipes()
-    } catch (error) {
-        if (error instanceof Error) {
-            errorMessage.value = error.message
-        }
-    } finally {
-        loading.value = false
-    }
-})
+handleSearch('')
 </script>
 
 <template>
-    <h1>Recherche</h1>
+  <RecipeSearch
+    v-model="searchQuery"
+    @search="handleSearch"
+  />
 
-    <p v-if="loading">
-        Chargement...
-    </p>
+  <p v-if="searchState?.statut === 'chargement'">
+    Chargement...
+  </p>
 
-    <p v-else-if="errorMessage">
-        {{ errorMessage }}
-    </p>
+  <p v-else-if="searchState?.statut === 'erreur'">
+    {{ searchState.message }}
+  </p>
 
-    <div class="flex flex-wrap justify-center gap-4 " v-else>
-        <RecipeCard  v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
-    </div>
+  <div
+    v-else-if="searchState?.statut === 'succes'"
+    class="flex flex-wrap justify-center gap-4"
+  >
+    <RecipeCard
+      v-for="recipe in searchState.recipes"
+      :key="recipe.id"
+      :recipe="recipe"
+    />
+  </div>
 </template>
 
 <style scoped></style>
+

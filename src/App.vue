@@ -1,12 +1,11 @@
 <script setup lang="ts">
+import { darkTheme, NConfigProvider } from 'naive-ui'
 import { ref, watch } from 'vue'
-import { darkTheme, NConfigProvider, type GlobalThemeOverrides } from 'naive-ui'
 
 import AppHeader from './components/AppHeader.vue'
-import { lightThemeOverrides, darkThemeOverrides } from './theme/theme.ts'
+import { darkThemeOverrides, lightThemeOverrides } from './theme/theme'
 
-
-const isDark = ref(true)
+const isDark = ref(false)
 
 watch(
   isDark,
@@ -18,10 +17,8 @@ watch(
 </script>
 
 <template>
-  <NConfigProvider
-  :theme="isDark ? darkTheme : null"
-  :theme-overrides="isDark ? darkThemeOverrides : lightThemeOverrides"
->
+  <NConfigProvider :theme="isDark ? darkTheme : null"
+    :theme-overrides="isDark ? darkThemeOverrides : lightThemeOverrides">
     <div class="min-h-screen bg-stone-50 text-stone-800 dark:bg-stone-950 dark:text-stone-100">
       <AppHeader v-model="isDark" />
       <RouterView />
