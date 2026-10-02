@@ -92,11 +92,12 @@ export async function getRecipeById(id: string): Promise<Recipe> {
     for (let i = 1; i <= 20; i++) {
         const name = meal[`strIngredient${i}`]
         const measure = meal[`strMeasure${i}`]
-
         if (name && name.trim()) {
+            const image = `https://www.themealdb.com/images/ingredients/${name.replaceAll(' ', '_')}.png`
             ingredients.push({
                 name,
-                measure: measure ?? "A votre convenance"
+                measure: measure ?? "A votre convenance",
+                image
             })
         }
     }
@@ -108,7 +109,7 @@ export async function getRecipeById(id: string): Promise<Recipe> {
         thumbnail: meal.strMealThumb,
         instructions: meal.strInstructions,
         youtube: meal.strYoutube,
-        ingredients: []
+        ingredients
     }
 
     return recipe
