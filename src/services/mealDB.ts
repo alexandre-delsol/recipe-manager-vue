@@ -1,5 +1,6 @@
-import type { Recipe } from "@/types/recipe"
+import type { Recipe, RecipeSummary } from "@/types/recipe"
 import type { Ingredient } from '@/types/ingredient'
+import type { MealDbRecipeSummary } from '@/types/recipe'
 type MealDbMeal = {
     idMeal: string
     strMeal: string
@@ -65,8 +66,32 @@ type MealDbMeal = {
 type MealDbResponse = {
     meals: MealDbMeal[] | null
 }
+type MealDbSearchResponse = {
+    meals: MealDbRecipeSummary[] | null
+}
 
+export async function searchRecipes(query: string): Promise<RecipeSummary[]> {
+    const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+    const response = await fetch(url)
 
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`)
+    }
+
+    const data = await response.json() as MealDbSearchResponse
+
+    if (data.meals === null || data.meals.length === 0) {
+        throw new Error(`Recette inexistante`)
+    }
+
+    return data.meals.map((meal) => ({
+        id: meal.idMeal,
+        name: meal.strMeal,
+        thumbnail: meal.strMealThumb,
+        category: meal.strCategory,
+        area: meal.strArea
+    }))
+}
 export async function getRecipeById(id: string): Promise<Recipe> {
     const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
     const response = await fetch(url)
