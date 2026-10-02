@@ -6,7 +6,6 @@ import AppHeader from './components/AppHeader.vue'
 import { darkThemeOverrides, lightThemeOverrides } from './theme/theme'
 
 const isDark = ref(false)
-
 watch(
   isDark,
   (value) => {

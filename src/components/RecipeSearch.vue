@@ -45,7 +45,7 @@ async function handleSubmit() {
       path="query"
       class="mb-0"
     >
-      <div class="flex w-full gap-2">
+      <div class="flex w-full flex-col gap-2 sm:flex-row">
         <NInput
           v-model:value="model"
           placeholder="Rechercher une recette..."
