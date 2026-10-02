@@ -1,6 +1,6 @@
 import type { GlobalThemeOverrides } from 'naive-ui'
 
-export const themeOverrides: GlobalThemeOverrides = {
+export const lightThemeOverrides: GlobalThemeOverrides = {
   common: {
     primaryColor: '#ea580c',
     primaryColorHover: '#f97316',
@@ -16,15 +16,24 @@ export const themeOverrides: GlobalThemeOverrides = {
     itemColorHover: '#fff7ed',
     itemColorActive: '#ffedd5',
     itemColorActiveHover: '#ffedd5',
+  },
+}
 
-    itemTextColorHorizontal: '#57534e',
-    itemTextColorHoverHorizontal: '#c2410c',
-    itemTextColorActiveHorizontal: '#c2410c',
-    itemTextColorActiveHoverHorizontal: '#c2410c',
-
-    itemColorHoverHorizontal: '#fff7ed',
-    itemColorActiveHorizontal: '#ffedd5',
-    itemColorActiveHoverHorizontal: '#ffedd5',
+export const darkThemeOverrides: GlobalThemeOverrides = {
+  common: {
+    primaryColor: '#ea580c',
+    primaryColorHover: '#f97316',
+    primaryColorPressed: '#c2410c',
   },
 
+  Menu: {
+    itemTextColor: '#e7e5e4',
+    itemTextColorHover: '#fb923c',
+    itemTextColorActive: '#fb923c',
+    itemTextColorActiveHover: '#fdba74',
+
+    itemColorHover: '#292524',
+    itemColorActive: '#431407',
+    itemColorActiveHover: '#431407',
+  },
 }

@@ -1,12 +1,30 @@
 <script setup lang="ts">
-import AppHeader from './components/AppHeader.vue';
-import { themeOverrides } from '@/theme/theme'
-import { NConfigProvider } from 'naive-ui'
+import { ref, watch } from 'vue'
+import { darkTheme, NConfigProvider, type GlobalThemeOverrides } from 'naive-ui'
+
+import AppHeader from './components/AppHeader.vue'
+import { lightThemeOverrides, darkThemeOverrides } from './theme/theme.ts'
+
+
+const isDark = ref(true)
+
+watch(
+  isDark,
+  (value) => {
+    document.documentElement.classList.toggle('dark', value)
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
-  <NConfigProvider :theme-overrides="themeOverrides">
-    <AppHeader />
-    <RouterView />
+  <NConfigProvider
+  :theme="isDark ? darkTheme : null"
+  :theme-overrides="isDark ? darkThemeOverrides : lightThemeOverrides"
+>
+    <div class="min-h-screen bg-stone-50 text-stone-800 dark:bg-stone-950 dark:text-stone-100">
+      <AppHeader v-model="isDark" />
+      <RouterView />
+    </div>
   </NConfigProvider>
 </template>

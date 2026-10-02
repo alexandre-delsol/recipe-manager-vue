@@ -1,5 +1,5 @@
-
 <script setup lang="ts">
+import RecipeCard from '@/components/RecipeCard.vue'
 import { searchRecipes } from '@/services/mealDB'
 import type { RecipeSummary } from '@/types/recipe'
 import { onMounted, ref } from 'vue'
@@ -38,13 +38,8 @@ onMounted(async () => {
         {{ errorMessage }}
     </p>
 
-    <div v-else>
-        <div v-for="recipe in recipes" :key="recipe.id">
-            <h2>{{ recipe.name }}</h2>
-            <img :src="recipe.thumbnail" :alt="recipe.name">
-            <p>{{ recipe.category }}</p>
-            <p>{{ recipe.area }}</p>
-        </div>
+    <div class="flex flex-wrap justify-center gap-4 " v-else>
+        <RecipeCard  v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
     </div>
 </template>
 
