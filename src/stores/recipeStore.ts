@@ -1,8 +1,7 @@
+import { searchRecipes as fetchRecipes } from '@/services/mealDB'
 import type { RecipeSummary } from '@/types/recipe'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-
-import { searchRecipes as fetchRecipes } from '@/services/mealDB'
+import { ref, watch } from 'vue'
 
 type SearchState =
     | { statut: 'chargement' }
@@ -11,6 +10,57 @@ type SearchState =
 
 export const useRecipeStore = defineStore('recipe', () => {
     const searchState = ref<SearchState | null>(null)
+    const favorites = ref<RecipeSummary[]>([])
+    watch(
+        favorites,
+        (newFavorites) => {
+            localStorage.setItem(
+                'recipe-favorites',
+                JSON.stringify(newFavorites)
+            )
+        },
+        { deep: true }
+    )
+
+    function loadFavorites(): RecipeSummary[] {
+        const storedFavorites = localStorage.getItem('recipe-favorites')
+
+        if (!storedFavorites) {
+            return []
+        }
+
+        try {
+            return JSON.parse(storedFavorites) as RecipeSummary[]
+        } catch {
+            return []
+        }
+    }
+
+    function addFavorite(recipe: RecipeSummary) {
+        if (recipe.id === '') return
+
+        const alreadyFavorite = favorites.value.some(
+            (favorite) => favorite.id === recipe.id
+        )
+
+        if (alreadyFavorite) return
+
+        favorites.value.push(recipe)
+    }
+
+    function removeFavorite(id: string) {
+        favorites.value = favorites.value.filter(
+            (favorite) => favorite.id !== id
+        )
+    }
+
+    function isFavorite(id: string): boolean {
+        return favorites.value.some(
+            (favorite) => favorite.id === id
+        )
+    }
+
+
 
     async function searchRecipes(query: string) {
         searchState.value = { statut: 'chargement' }
@@ -35,6 +85,10 @@ export const useRecipeStore = defineStore('recipe', () => {
     return {
         searchState,
         searchRecipes,
+        favorites,
+        addFavorite,
+        removeFavorite,
+        isFavorite,
     }
 })
 

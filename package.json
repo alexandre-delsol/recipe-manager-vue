@@ -13,6 +13,7 @@
     "exigences": "node scripts/exigences.mjs"
   },
   "dependencies": {
+    "@vicons/ionicons5": "^0.13.0",
     "naive-ui": "^2",
     "pinia": "^4.0.3",
     "vue": "^3.5.42",

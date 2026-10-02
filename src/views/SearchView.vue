@@ -39,8 +39,9 @@ handleSearch('')
       v-for="recipe in searchState.recipes"
       :key="recipe.id"
       :recipe="recipe"
-    />
-  </div>
+      />
+    </div>
+    
 </template>
 
 <style scoped></style>
