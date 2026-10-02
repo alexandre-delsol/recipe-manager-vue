@@ -69,6 +69,10 @@ type MealDbResponse = {
 type MealDbSearchResponse = {
     meals: MealDbRecipeSummary[] | null
 }
+type MealDbRandomResponse = {
+    meals: MealDbMeal[]
+}
+
 
 export async function searchRecipes(query: string): Promise<RecipeSummary[]> {
     const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
@@ -92,6 +96,35 @@ export async function searchRecipes(query: string): Promise<RecipeSummary[]> {
         area: meal.strArea
     }))
 }
+function mapMealToRecipe(meal: MealDbMeal): Recipe {
+    const ingredients: Ingredient[] = []
+
+    for (let i = 1; i <= 20; i++) {
+        const name = meal[`strIngredient${i}`]
+        const measure = meal[`strMeasure${i}`]
+
+        if (name && name.trim()) {
+            const image = `https://www.themealdb.com/images/ingredients/${name.replaceAll(' ', '_')}.png`
+
+            ingredients.push({
+                name,
+                measure: measure ?? 'A votre convenance',
+                image
+            })
+        }
+    }
+
+    return {
+        id: meal.idMeal,
+        name: meal.strMeal,
+        category: meal.strCategory,
+        area: meal.strArea,
+        thumbnail: meal.strMealThumb,
+        instructions: meal.strInstructions,
+        youtube: meal.strYoutube,
+        ingredients
+    }
+}
 export async function getRecipeById(id: string): Promise<Recipe> {
     const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
     const response = await fetch(url)
@@ -112,30 +145,29 @@ export async function getRecipeById(id: string): Promise<Recipe> {
     if (!meal) {
         throw new Error(`Recette inexistante`)
     }
-    const ingredients: Ingredient[] = []
 
-    for (let i = 1; i <= 20; i++) {
-        const name = meal[`strIngredient${i}`]
-        const measure = meal[`strMeasure${i}`]
-        if (name && name.trim()) {
-            const image = `https://www.themealdb.com/images/ingredients/${name.replaceAll(' ', '_')}.png`
-            ingredients.push({
-                name,
-                measure: measure ?? "A votre convenance",
-                image
-            })
-        }
-    }
-    const recipe: Recipe = {
-        id: meal.idMeal,
-        name: meal.strMeal,
-        category: meal.strCategory,
-        area: meal.strArea,
-        thumbnail: meal.strMealThumb,
-        instructions: meal.strInstructions,
-        youtube: meal.strYoutube,
-        ingredients
+    return mapMealToRecipe(meal)
+}
+export async function getRandomRecipe(): Promise<Recipe> {
+    const response = await fetch(
+        'https://www.themealdb.com/api/json/v1/1/random.php'
+    )
+
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`)
     }
 
-    return recipe
+    const data = await response.json() as MealDbRandomResponse
+
+    if (data.meals.length === 0) {
+        throw new Error('Aucune recette trouvée')
+    }
+
+    const meal = data.meals[0]
+
+    if (!meal) {
+        throw new Error('Aucune recette trouvée')
+    }
+
+    return mapMealToRecipe(meal)
 }
