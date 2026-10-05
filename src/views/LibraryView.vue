@@ -14,7 +14,9 @@ const { favorites } = storeToRefs(recipeStore)
     <h1 class="mb-8 text-3xl font-bold">
       Ma bibliothèque
     </h1>
-
+    <p>
+      Nombre de favoris : {{ favorites.length }}
+    </p>
     <p v-if="favorites.length === 0">
       Aucune recette favorite.
     </p>
@@ -23,7 +25,7 @@ const { favorites } = storeToRefs(recipeStore)
       <RecipeTable :recipes="favorites" />
     </div>
 
-    
+
   </main>
 </template>
 

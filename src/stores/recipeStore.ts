@@ -10,21 +10,9 @@ type SearchState =
 
 export const useRecipeStore = defineStore('recipe', () => {
     const searchState = ref<SearchState | null>(null)
-    const favorites = ref<RecipeSummary[]>([])
-    watch(
-        favorites,
-        (newFavorites) => {
-            localStorage.setItem(
-                'recipe-favorites',
-                JSON.stringify(newFavorites)
-            )
-        },
-        { deep: true }
-    )
 
     function loadFavorites(): RecipeSummary[] {
         const storedFavorites = localStorage.getItem('recipe-favorites')
-
         if (!storedFavorites) {
             return []
         }
@@ -35,6 +23,18 @@ export const useRecipeStore = defineStore('recipe', () => {
             return []
         }
     }
+    const favorites = ref<RecipeSummary[]>(loadFavorites())
+
+    watch(
+        favorites,
+        (newFavorites) => {
+            localStorage.setItem(
+                'recipe-favorites',
+                JSON.stringify(newFavorites)
+            )
+        },
+        { deep: true }
+    )
 
     function addFavorite(recipe: RecipeSummary) {
         if (recipe.id === '') return
