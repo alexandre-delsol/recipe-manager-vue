@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DataTableColumns } from 'naive-ui'
-import { NButton, NDataTable, NIcon } from 'naive-ui'
+import { NButton, NDataTable, NIcon, useMessage } from 'naive-ui'
 import { h } from 'vue'
 import { EyeOutline, TrashOutline } from '@vicons/ionicons5'
 import { useRecipeStore } from '@/stores/recipeStore'
@@ -10,6 +10,8 @@ import { RouterLink } from 'vue-router'
 defineProps<{
     recipes: RecipeSummary[]
 }>()
+
+const message = useMessage()
 
 const recipeStore = useRecipeStore()
 
@@ -83,6 +85,7 @@ const columns: DataTableColumns<RecipeSummary> = [
 
 function removeFavorite(id: string) {
     recipeStore.removeFavorite(id)
+    message.success('Recette retirée des favoris')
 }
 </script>
 

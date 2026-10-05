@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-
+import { useMessage } from 'naive-ui'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import { getRandomRecipe } from '@/services/mealDB'
 import type { Recipe } from '@/types/recipe'
-
+const message = useMessage()
 const recipe = ref<Recipe | null>(null)
 const loading = ref(true)
 const loadingRandomRecipe = ref(false)
@@ -21,6 +21,7 @@ async function loadRandomRecipe() {
     } catch (error) {
         if (error instanceof Error) {
             errorMessage.value = error.message
+            message.error(error.message)
         }
     } finally {
         loadingRandomRecipe.value = false

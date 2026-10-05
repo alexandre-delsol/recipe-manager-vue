@@ -2,6 +2,11 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+    --color-brand: red;
+    --color-yes: black;
+}
+
 body {
   font-family: 'DM Sans', sans-serif;
 }
