@@ -8,7 +8,7 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const recipeStore = useRecipeStore()
-const { favorites } = storeToRefs(recipeStore)
+const { favorites, history } = storeToRefs(recipeStore)
 const isDark = defineModel<boolean>()
 const isMenuOpen = ref(false)
 
@@ -24,6 +24,10 @@ const menuOptions = computed<MenuOption[]>(() => [
   {
     key: '/library',
     label: `Bibliothèque (${favorites.value.length})`
+  },
+  {
+    key: '/history',
+    label: `Historique (${history.value.length})`
   }
 ])
 

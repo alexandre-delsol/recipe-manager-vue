@@ -1,5 +1,5 @@
 import { searchRecipes as fetchRecipes } from '@/services/mealDB'
-import type { RecipeSummary } from '@/types/recipe'
+import type { RecipeHistoryItem, RecipeSummary } from '@/types/recipe'
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 
@@ -9,7 +9,7 @@ type SearchState =
     | { statut: 'erreur'; message: string }
 
 export const useRecipeStore = defineStore('recipe', () => {
-    const searchState = ref<SearchState | null>(null)
+
 
     function loadFavorites(): RecipeSummary[] {
         const storedFavorites = localStorage.getItem('recipe-favorites')
@@ -60,7 +60,57 @@ export const useRecipeStore = defineStore('recipe', () => {
         )
     }
 
+    function loadHistory(): RecipeHistoryItem[] {
+        const storedHistory = localStorage.getItem('recipe-history')
 
+        if (!storedHistory) {
+            return []
+        }
+
+        try {
+            return JSON.parse(storedHistory) as RecipeHistoryItem[]
+        } catch {
+            return []
+        }
+    }
+
+    const history = ref<RecipeHistoryItem[]>(loadHistory())
+
+    watch(
+        history,
+        (newHistory) => {
+            localStorage.setItem(
+                'recipe-history',
+                JSON.stringify(newHistory)
+            )
+        },
+        { deep: true }
+    )
+
+    function addToHistory(recipe: RecipeSummary) {
+        const visitedAt = new Date()
+
+        const historyItem: RecipeHistoryItem = {
+            ...recipe,
+            visitedAt: visitedAt.toISOString()
+        }
+
+        history.value = history.value.filter(
+            (historyRecipe) => historyRecipe.id !== recipe.id
+        )
+
+        history.value.unshift(historyItem)
+    }
+    function removeHistoryItem(id: string) {
+        history.value = history.value.filter(
+            (historyRecipe) => historyRecipe.id !== id
+        )
+    }
+    function clearHistory() {
+        history.value = []
+    }
+
+    const searchState = ref<SearchState | null>(null)
 
     async function searchRecipes(query: string) {
         searchState.value = { statut: 'chargement' }
@@ -89,6 +139,10 @@ export const useRecipeStore = defineStore('recipe', () => {
         addFavorite,
         removeFavorite,
         isFavorite,
+        history,
+        addToHistory,
+        removeHistoryItem,
+        clearHistory
     }
 })
 

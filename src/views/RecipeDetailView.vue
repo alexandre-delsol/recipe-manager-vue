@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import { getRecipeById } from '@/services/mealDB'
 import type { Recipe, RecipeSummary } from '@/types/recipe'
+import { useRecipeStore } from '@/stores/recipeStore'
 
 const route = useRoute()
 
@@ -12,13 +13,21 @@ const recipe = ref<Recipe | null>(null)
 const errorMessage = ref<string | null>(null)
 const loading = ref(true)
 
-
+const recipeStore = useRecipeStore()
 
 onMounted(async () => {
     try {
         const result = await getRecipeById(route.params.id as string)
 
         recipe.value = result
+        const historyRecipe: RecipeSummary = {
+            id: result.id,
+            name: result.name,
+            thumbnail: result.thumbnail,
+            category: result.category,
+            area: result.area
+        }
+        recipeStore.addToHistory(historyRecipe)
     } catch (error) {
         if (error instanceof Error) {
             errorMessage.value = error.message

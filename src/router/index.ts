@@ -1,3 +1,4 @@
+import HistoryView from '@/views/HistoryView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LibraryView from '@/views/LibraryView.vue'
 import RecipeDetailView from '@/views/RecipeDetailView.vue'
@@ -27,6 +28,11 @@ const router = createRouter({
       name: "library",
       component: LibraryView
     },
+    {
+      path: '/history',
+      name: 'history',
+      component: HistoryView
+    }
   ],
 })
 

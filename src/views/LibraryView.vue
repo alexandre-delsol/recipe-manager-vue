@@ -5,7 +5,6 @@ import RecipeTable from '@/components/RecipeTable.vue'
 import { useRecipeStore } from '@/stores/recipeStore'
 
 const recipeStore = useRecipeStore()
-
 const { favorites } = storeToRefs(recipeStore)
 </script>
 
@@ -24,8 +23,6 @@ const { favorites } = storeToRefs(recipeStore)
     <div v-show="favorites.length > 0" class="w-full overflow-x-auto">
       <RecipeTable :recipes="favorites" />
     </div>
-
-
   </main>
 </template>
 

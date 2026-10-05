@@ -19,6 +19,10 @@ export type RecipeSummary = {
     area: string
 }
 
+export type RecipeHistoryItem = RecipeSummary & {
+    visitedAt: string
+}
+
 export type MealDbRecipeSummary = {
     idMeal: string;
     strMeal: string;
