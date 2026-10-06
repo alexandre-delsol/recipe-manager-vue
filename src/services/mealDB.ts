@@ -1,4 +1,4 @@
-import type { Recipe, RecipeSummary } from "@/types/recipe"
+import type { Recipe, RecipeSummary, RecipeFilters, RecipeCategory, RecipeArea } from "@/types/recipe"
 import type { Ingredient } from '@/types/ingredient'
 import type { MealDbRecipeSummary } from '@/types/recipe'
 type MealDbMeal = {
@@ -73,19 +73,112 @@ type MealDbRandomResponse = {
     meals: MealDbMeal[]
 }
 
+type MealDbCategoryResponse = {
+    meals: RecipeCategory[] | null
+}
 
-export async function searchRecipes(query: string): Promise<RecipeSummary[]> {
-    const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+type MealDbAreaResponse = {
+    meals: RecipeArea[] | null
+}
+
+type MealDbFilterResult = {
+    idMeal: string
+    strMeal: string
+    strMealThumb: string
+}
+type MealDbFilterResponse = {
+    meals: MealDbFilterResult[] | null
+}
+
+export async function getCategories(): Promise<RecipeCategory[]> {
+    const url = `https://www.themealdb.com/api/json/v1/1/list.php?c=list`
     const response = await fetch(url)
 
     if (!response.ok) {
         throw new Error(`Erreur HTTP : ${response.status}`)
     }
 
-    const data = await response.json() as MealDbSearchResponse
+    const data = await response.json() as MealDbCategoryResponse
 
     if (data.meals === null || data.meals.length === 0) {
         throw new Error(`Recette inexistante`)
+    }
+
+    return data.meals
+
+}
+
+export async function getAreas(): Promise<RecipeArea[]> {
+    const url = `https://www.themealdb.com/api/json/v1/1/list.php?a=list`
+
+    const response = await fetch(url)
+
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`)
+    }
+
+    const data = await response.json() as MealDbAreaResponse
+
+    if (data.meals === null || data.meals.length === 0) {
+        throw new Error(`Recette inexistante`)
+    }
+
+    return data.meals
+}
+
+export async function searchRecipes(
+    filters: RecipeFilters
+): Promise<RecipeSummary[]> {
+    const params = new URLSearchParams()
+    let endpoint: 'filter.php' | 'search.php'
+    let isFilterRequest = false
+
+    if (filters.category !== null) {
+        endpoint = 'filter.php'
+        params.set('c', filters.category)
+        isFilterRequest = true
+    } else if (filters.area !== null) {
+        endpoint = 'filter.php'
+        params.set('a', filters.area)
+        isFilterRequest = true
+    } else {
+        endpoint = 'search.php'
+
+        if (filters.query === null || filters.query === '') {
+            throw new Error('Aucun filtre de recherche')
+        }
+
+        params.set('s', filters.query)
+    }
+
+    const url = `https://www.themealdb.com/api/json/v1/1/${endpoint}?${params.toString()}`
+
+    const response = await fetch(url)
+
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`)
+    }
+
+    if (isFilterRequest) {
+        const data = await response.json() as MealDbFilterResponse
+
+        if (data.meals === null || data.meals.length === 0) {
+            throw new Error('Recette inexistante')
+        }
+
+        return data.meals.map((meal) => ({
+            id: meal.idMeal,
+            name: meal.strMeal,
+            thumbnail: meal.strMealThumb,
+            category: filters.category,
+            area: filters.area
+        }))
+    }
+
+    const data = await response.json() as MealDbSearchResponse
+
+    if (data.meals === null || data.meals.length === 0) {
+        throw new Error('Recette inexistante')
     }
 
     return data.meals.map((meal) => ({
@@ -96,6 +189,7 @@ export async function searchRecipes(query: string): Promise<RecipeSummary[]> {
         area: meal.strArea
     }))
 }
+
 function mapMealToRecipe(meal: MealDbMeal): Recipe {
     const ingredients: Ingredient[] = []
 
@@ -170,4 +264,27 @@ export async function getRandomRecipe(): Promise<Recipe> {
     }
 
     return mapMealToRecipe(meal)
+}
+export async function getDefaultRecipes(
+  count: number
+): Promise<RecipeSummary[]> {
+  const requests = Array.from(
+    { length: count },
+    () => getRandomRecipe()
+  )
+
+  const recipes = await Promise.all(requests)
+
+  const uniqueRecipes = recipes.filter(
+    (recipe, index, array) =>
+      array.findIndex((item) => item.id === recipe.id) === index
+  )
+
+  return uniqueRecipes.map((recipe) => ({
+    id: recipe.id,
+    name: recipe.name,
+    thumbnail: recipe.thumbnail,
+    category: recipe.category,
+    area: recipe.area
+  }))
 }

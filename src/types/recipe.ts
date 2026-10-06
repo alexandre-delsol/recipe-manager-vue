@@ -15,8 +15,22 @@ export type RecipeSummary = {
     id: string
     name: string
     thumbnail: string
-    category: string
-    area: string
+    category: string | null
+    area: string | null
+}
+
+export type RecipeFilters = {
+    query: string | null
+    category: string | null
+    area: string | null
+}
+
+export type RecipeCategory = {
+    strCategory: string 
+}
+
+export type RecipeArea = {
+    strArea: string 
 }
 
 export type RecipeHistoryItem = RecipeSummary & {

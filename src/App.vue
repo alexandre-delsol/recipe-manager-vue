@@ -18,7 +18,7 @@ watch(
 <template>
   <NConfigProvider :theme="isDark ? darkTheme : null"
     :theme-overrides="isDark ? darkThemeOverrides : lightThemeOverrides">
-    <NMessageProvider>
+    <NMessageProvider placement="bottom-left">
       <div class="min-h-screen bg-stone-50 text-stone-800 dark:bg-stone-950 dark:text-stone-100">
         <AppHeader v-model="isDark" />
         <RouterView />

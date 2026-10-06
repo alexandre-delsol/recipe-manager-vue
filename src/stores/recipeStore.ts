@@ -1,8 +1,11 @@
-import { searchRecipes as fetchRecipes } from '@/services/mealDB'
-import type { RecipeHistoryItem, RecipeSummary } from '@/types/recipe'
+import { getDefaultRecipes as fetchDefaultRecipes, searchRecipes as fetchRecipes } from '@/services/mealDB'
+import type {
+    RecipeFilters,
+    RecipeHistoryItem,
+    RecipeSummary
+} from '@/types/recipe'
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
-
 type SearchState =
     | { statut: 'chargement' }
     | { statut: 'succes'; recipes: RecipeSummary[] }
@@ -112,11 +115,11 @@ export const useRecipeStore = defineStore('recipe', () => {
 
     const searchState = ref<SearchState | null>(null)
 
-    async function searchRecipes(query: string) {
+    async function searchRecipes(filters: RecipeFilters) {
         searchState.value = { statut: 'chargement' }
 
         try {
-            const result = await fetchRecipes(query)
+            const result = await fetchRecipes(filters)
 
             searchState.value = {
                 statut: 'succes',
@@ -131,7 +134,25 @@ export const useRecipeStore = defineStore('recipe', () => {
             }
         }
     }
+    async function loadDefaultRecipes(count: number) {
+        searchState.value = { statut: 'chargement' }
 
+        try {
+            const recipes = await fetchDefaultRecipes(count)
+
+            searchState.value = {
+                statut: 'succes',
+                recipes
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                searchState.value = {
+                    statut: 'erreur',
+                    message: error.message
+                }
+            }
+        }
+    }
     return {
         searchState,
         searchRecipes,
@@ -142,7 +163,8 @@ export const useRecipeStore = defineStore('recipe', () => {
         history,
         addToHistory,
         removeHistoryItem,
-        clearHistory
+        clearHistory,
+        loadDefaultRecipes
     }
 })
 
