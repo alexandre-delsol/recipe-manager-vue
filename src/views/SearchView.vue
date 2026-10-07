@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import RecipeCard from '@/components/RecipeCard.vue'
 import RecipeSearch from '@/components/RecipeSearch.vue'
-import { getAreas, getCategories, getRandomRecipe } from '@/services/mealDB'
+import { useRecipes } from '@/composables/useRecipes'
 import { useRecipeStore } from '@/stores/recipeStore'
-import type { RecipeArea, RecipeCategory, RecipeSummary } from '@/types/recipe'
 import { NButton, NSelect } from 'naive-ui'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref } from 'vue'
+
+import { onMounted, ref } from 'vue'
 const recipeStore = useRecipeStore()
 const { searchState } = storeToRefs(recipeStore)
 
-const categories = ref<RecipeCategory[]>([])
-const areas = ref<RecipeArea[]>([])
+
 const searchQuery = ref('')
 
 const selectedCategory = ref<string | null>(null)
@@ -25,13 +24,11 @@ async function handleSearch(query: string) {
   })
 }
 
-async function loadFilters() {
-  const resultCategories = await getCategories()
-  const resultAreas = await getAreas()
-
-  categories.value = resultCategories
-  areas.value = resultAreas
-}
+const {
+  categories,
+  areaOptions,
+  loadFilters
+} = useRecipes()
 
 async function selectCategory(category: string) {
   if (category === selectedCategory.value) {
@@ -42,13 +39,6 @@ async function selectCategory(category: string) {
 
   await handleSearch(searchQuery.value)
 }
-
-const areaOptions = computed(() =>
-  areas.value.map((area) => ({
-    label: area.strArea,
-    value: area.strArea
-  }))
-)
 
 async function initializePage() {
   await loadFilters()
