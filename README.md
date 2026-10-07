@@ -4,6 +4,10 @@ A recipe management application built with **Vue 3**, allowing users to search f
 
 The application uses **TheMealDB API** as its recipe data source and demonstrates modern Vue development practices with TypeScript, Pinia, Vue Router, Naive UI, and Tailwind CSS.
 
+## Live Demo
+
+[👉 Open Recipe Manager](https://recipe-manager-vue.vercel.app/)
+
 ## Features
 
 * 🔎 Search recipes by name
