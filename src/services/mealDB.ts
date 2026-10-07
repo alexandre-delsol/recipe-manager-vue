@@ -8,6 +8,8 @@ import type {
 import type { Ingredient } from '@/types/ingredient'
 import type { MealDbRecipeSummary } from '@/types/recipe'
 
+const MAX_FETCHES = 8
+
 type MealDbMeal = {
     idMeal: string
     strMeal: string
@@ -191,23 +193,23 @@ export async function searchRecipes(
             throw new Error('Aucune recette trouvée pour cette recherche')
         }
 
-        return data.meals.map((meal) => ({
-            id: meal.idMeal,
-            name: meal.strMeal,
-            thumbnail: meal.strMealThumb,
-            category: meal.strCategory,
-            area: meal.strArea
-        }))
+        return data.meals
+            .slice(0, MAX_FETCHES)
+            .map((meal) => ({
+                id: meal.idMeal,
+                name: meal.strMeal,
+                thumbnail: meal.strMealThumb,
+                category: meal.strCategory,
+                area: meal.strArea
+            }))
     }
 
- 
     if (
         filters.category === null &&
         filters.area === null
     ) {
         throw new Error('Aucun filtre de recherche')
     }
-
 
     const filterParams = new URLSearchParams()
 
@@ -231,11 +233,12 @@ export async function searchRecipes(
     }
 
     const meals = await Promise.all(
-        data.meals.map((meal) => getMealById(meal.idMeal))
+        data.meals
+            .slice(0, MAX_FETCHES)
+            .map((meal) => getMealById(meal.idMeal))
     )
 
     let filteredMeals = meals
-
 
     if (filters.area !== null) {
         filteredMeals = filteredMeals.filter(
@@ -252,13 +255,7 @@ export async function searchRecipes(
     if (filteredMeals.length === 0) {
         throw new Error('Aucune recette trouvée pour ces filtres')
     }
-console.log(
-    filteredMeals.map((meal) => ({
-        name: meal.strMeal,
-        category: meal.strCategory,
-        area: meal.strArea
-    }))
-)
+
     return filteredMeals.map(mapMealToSummary)
 }
 
@@ -327,7 +324,7 @@ export async function getDefaultRecipes(
     count: number
 ): Promise<RecipeSummary[]> {
     const requests = Array.from(
-        { length: count },
+        { length: Math.min(count, MAX_FETCHES) },
         () => getRandomRecipe()
     )
 

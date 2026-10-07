@@ -26,7 +26,7 @@ async function handleSearch(query: string) {
 }
 
 const skeletonCards = Array.from(
-  { length: 20 },
+  { length: 8 },
   (_, index) => `skeleton-${index + 1}`
 )
 
@@ -48,7 +48,7 @@ async function selectCategory(category: string) {
 
 async function initializePage() {
   await loadFilters()
-  await recipeStore.loadDefaultRecipes(20)
+  await recipeStore.loadDefaultRecipes(8)
 }
 
 async function handleAreaChange() {
