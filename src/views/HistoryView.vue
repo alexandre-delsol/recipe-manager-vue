@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 
 import HistoryTable from '@/components/HistoryTable.vue'
 import { useRecipeStore } from '@/stores/recipeStore'
+import AppPanel from '@/components/AppPanel.vue'
 
 const recipeStore = useRecipeStore()
 const { history } = storeToRefs(recipeStore)
@@ -10,16 +11,17 @@ const { history } = storeToRefs(recipeStore)
 
 <template>
     <main class="mx-auto min-w-0 max-w-6xl px-4 py-8">
+        <AppPanel>
         <p>
             Nombre dans l'historique : {{ history.length }}
         </p>
         <p v-if="history.length === 0">
             Aucune recette favorite.
         </p>
-
-        <div v-show="history.length > 0" class="w-full overflow-x-auto">
-            <HistoryTable :recipes="history" />
-        </div>
+            <div v-show="history.length > 0" class="w-full overflow-x-auto">
+                <HistoryTable :recipes="history" />
+            </div>
+        </AppPanel>
     </main>
 </template>
 

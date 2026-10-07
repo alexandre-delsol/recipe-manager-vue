@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 
 import RecipeTable from '@/components/RecipeTable.vue'
 import { useRecipeStore } from '@/stores/recipeStore'
+import AppPanel from '@/components/AppPanel.vue'
 
 const recipeStore = useRecipeStore()
 const { favorites } = storeToRefs(recipeStore)
@@ -10,6 +11,7 @@ const { favorites } = storeToRefs(recipeStore)
 
 <template>
   <main class="mx-auto min-w-0 max-w-6xl px-4 py-8">
+    <AppPanel>
     <h1 class="mb-8 text-3xl font-bold">
       Ma bibliothèque
     </h1>
@@ -20,9 +22,10 @@ const { favorites } = storeToRefs(recipeStore)
       Aucune recette favorite.
     </p>
 
-    <div v-show="favorites.length > 0" class="w-full overflow-x-auto">
-      <RecipeTable :recipes="favorites" />
-    </div>
+      <div v-show="favorites.length > 0" class="w-full overflow-x-auto">
+        <RecipeTable :recipes="favorites" />
+      </div>
+    </AppPanel>
   </main>
 </template>
 
