@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RecipeCard from '@/components/RecipeCard.vue'
+import RecipeCardSkeleton from '@/components/RecipeCardSkeleton.vue'
 import RecipeSearch from '@/components/RecipeSearch.vue'
 import { useRecipes } from '@/composables/useRecipes'
 import { useRecipeStore } from '@/stores/recipeStore'
@@ -23,6 +24,11 @@ async function handleSearch(query: string) {
     area: selectedArea.value
   })
 }
+
+const skeletonCards = Array.from(
+  { length: 20 },
+  (_, index) => `skeleton-${index + 1}`
+)
 
 const {
   categories,
@@ -79,8 +85,9 @@ onMounted(initializePage)
     </section>
   </div>
 
-  <p v-if="searchState?.statut === 'chargement'" class="p-4">
-    Chargement...
+  <p v-if="searchState?.statut === 'chargement'" class="flex flex-wrap justify-center gap-4">
+    <RecipeCardSkeleton  v-for="skeleton in skeletonCards"
+    :key="skeleton"/>
   </p>
 
   <p v-else-if="searchState?.statut === 'erreur'" class="p-4">
