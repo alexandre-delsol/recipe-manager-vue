@@ -18,17 +18,33 @@ const selectedCategory = ref<string | null>(null)
 const selectedArea = ref<string | null>(null)
 
 async function handleSearch(query: string) {
+  const hasQuery = query.trim() !== ''
+  const hasCategory = selectedCategory.value !== null
+  const hasArea = selectedArea.value !== null
+
+  if (!hasQuery && !hasCategory && !hasArea) {
+    await recipeStore.loadDefaultRecipes(8)
+    return
+  }
+
   await recipeStore.searchRecipes({
     query,
     category: selectedCategory.value,
     area: selectedArea.value
   })
 }
-
 const skeletonCards = Array.from(
   { length: 8 },
   (_, index) => `skeleton-${index + 1}`
 )
+
+async function resetFilters() {
+  searchQuery.value = ''
+  selectedCategory.value = null
+  selectedArea.value = null
+
+  await recipeStore.loadDefaultRecipes(8)
+}
 
 const {
   categories,
@@ -83,12 +99,14 @@ onMounted(initializePage)
       <NSelect v-model:value="selectedArea" :options="areaOptions" @update:value="handleAreaChange"
         placeholder="Sélectionner un pays" class="w-full" />
     </section>
+    <NButton secondary @click="resetFilters">
+      Réinitialiser les filtres
+    </NButton>
   </div>
 
-  <p v-if="searchState?.statut === 'chargement'" class="flex flex-wrap justify-center gap-4">
-    <RecipeCardSkeleton  v-for="skeleton in skeletonCards"
-    :key="skeleton"/>
-  </p>
+  <div v-if="searchState?.statut === 'chargement'" class="flex flex-wrap justify-center gap-4">
+    <RecipeCardSkeleton v-for="skeleton in skeletonCards" :key="skeleton" />
+  </div>
 
   <p v-else-if="searchState?.statut === 'erreur'" class="p-4">
     {{ searchState.message }}
@@ -97,6 +115,7 @@ onMounted(initializePage)
   <div v-else-if="searchState?.statut === 'succes'" class="flex flex-wrap justify-center gap-4">
     <RecipeCard v-for="recipe in searchState.recipes" :key="recipe.id" :recipe="recipe" />
   </div>
+
 </template>
 
 <style scoped></style>
