@@ -5,11 +5,16 @@ import { ref, watch } from 'vue'
 import AppHeader from './components/AppHeader.vue'
 import { darkThemeOverrides, lightThemeOverrides } from './theme/theme'
 
-const isDark = ref(false)
+const savedTheme = localStorage.getItem('dark-mode')
+
+const isDark = ref<boolean>(
+  savedTheme === 'true'
+)
 watch(
   isDark,
   (value) => {
     document.documentElement.classList.toggle('dark', value)
+    localStorage.setItem('dark-mode',`${value}`)
   },
   { immediate: true }
 )
