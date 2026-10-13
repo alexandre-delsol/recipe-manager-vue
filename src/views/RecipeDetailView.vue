@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
@@ -14,6 +14,8 @@ const errorMessage = ref<string | null>(null)
 const loading = ref(true)
 
 const recipeStore = useRecipeStore()
+
+
 
 onMounted(async () => {
     try {
@@ -35,6 +37,19 @@ onMounted(async () => {
     } finally {
         loading.value = false
     }
+})
+
+const youtubeEmbedUrl = computed(() => {
+    const youtubeUrl = recipe.value?.youtube
+
+    if (!youtubeUrl) return null
+
+    const url = new URL(youtubeUrl)
+    const videoId = url.searchParams.get('v')
+
+    if (!videoId) return null
+
+    return `https://www.youtube-nocookie.com/embed/${videoId}`
 })
 </script>
 
@@ -119,10 +134,11 @@ onMounted(async () => {
                     {{ recipe.instructions }}
                 </p>
 
-                <a v-if="recipe.youtube" :href="recipe.youtube" target="_blank" rel="noopener noreferrer"
-                    class="mt-6 inline-block rounded-lg bg-orange-600 px-5 py-3 font-medium text-white transition hover:bg-orange-700">
-                    Watch the recipe on YouTube
-                </a>
+
+                <iframe v-if="youtubeEmbedUrl" :src="youtubeEmbedUrl" title="Recipe video on YouTube"
+                    class="mt-4 aspect-video w-full rounded-xl"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
             </section>
 
         </div>
