@@ -112,7 +112,7 @@ onMounted(initializePage)
     {{ searchState.message }}
   </p>
 
-  <div v-else-if="searchState?.status === 'sucess'" class="flex flex-wrap justify-center gap-4">
+  <div v-else-if="searchState?.status === 'success'" class="flex flex-wrap justify-center gap-4">
     <RecipeCard v-for="recipe in searchState.recipes" :key="recipe.id" :recipe="recipe" />
   </div>
 
