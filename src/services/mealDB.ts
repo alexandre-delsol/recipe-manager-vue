@@ -107,13 +107,13 @@ export async function getCategories(): Promise<RecipeCategory[]> {
     const response = await fetch(url)
 
     if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`)
+        throw new Error(`HTTP error: ${response.status}`)
     }
 
     const data = await response.json() as MealDbCategoryResponse
 
     if (data.meals === null || data.meals.length === 0) {
-        throw new Error('Aucune catégorie trouvée')
+        throw new Error('No categories found')
     }
 
     return data.meals
@@ -124,13 +124,13 @@ export async function getAreas(): Promise<RecipeArea[]> {
     const response = await fetch(url)
 
     if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`)
+        throw new Error(`HTTP error: ${response.status}`)
     }
 
     const data = await response.json() as MealDbAreaResponse
 
     if (data.meals === null || data.meals.length === 0) {
-        throw new Error('Aucun pays trouvé')
+        throw new Error('No areas found')
     }
 
     return data.meals
@@ -141,19 +141,19 @@ async function getMealById(id: string): Promise<MealDbMeal> {
     const response = await fetch(url)
 
     if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`)
+        throw new Error(`HTTP error: ${response.status}`)
     }
 
     const data = await response.json() as MealDbResponse
 
     if (data.meals === null || data.meals.length === 0) {
-        throw new Error('Recette inexistante')
+        throw new Error('Recipe not found')
     }
 
     const meal = data.meals[0]
 
     if (!meal) {
-        throw new Error('Recette inexistante')
+        throw new Error('Recipe not found')
     }
 
     return meal
@@ -184,13 +184,13 @@ export async function searchRecipes(
         const response = await fetch(url)
 
         if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`)
+            throw new Error(`HTTP error: ${response.status}`)
         }
 
         const data = await response.json() as MealDbSearchResponse
 
         if (data.meals === null || data.meals.length === 0) {
-            throw new Error('Aucune recette trouvée pour cette recherche')
+            throw new Error('No recipes found for this search')
         }
 
         return data.meals
@@ -208,7 +208,7 @@ export async function searchRecipes(
         filters.category === null &&
         filters.area === null
     ) {
-        throw new Error('Aucun filtre de recherche')
+        throw new Error('At least one filter is required')
     }
 
     const filterParams = new URLSearchParams()
@@ -223,13 +223,13 @@ export async function searchRecipes(
     const response = await fetch(url)
 
     if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`)
+        throw new Error(`HTTP error : ${response.status}`)
     }
 
     const data = await response.json() as MealDbFilterResponse
 
     if (data.meals === null || data.meals.length === 0) {
-        throw new Error('Aucune recette trouvée pour ce filtre')
+        throw new Error('No recipes found for these filters')
     }
 
     const meals = await Promise.all(
@@ -253,7 +253,7 @@ export async function searchRecipes(
     }
 
     if (filteredMeals.length === 0) {
-        throw new Error('Aucune recette trouvée pour ces filtres')
+        throw new Error('No recipes found for these filters')
     }
 
     return filteredMeals.map(mapMealToSummary)
@@ -272,7 +272,7 @@ function mapMealToRecipe(meal: MealDbMeal): Recipe {
 
             ingredients.push({
                 name,
-                measure: measure ?? 'A votre convenance',
+                measure: measure ?? 'To taste',
                 image
             })
         }
@@ -302,19 +302,19 @@ export async function getRandomRecipe(): Promise<Recipe> {
     )
 
     if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`)
+        throw new Error(`HTTP error: ${response.status}`)
     }
 
     const data = await response.json() as MealDbRandomResponse
 
     if (data.meals.length === 0) {
-        throw new Error('Aucune recette trouvée')
+        throw new Error('No recipe found')
     }
 
     const meal = data.meals[0]
 
     if (!meal) {
-        throw new Error('Aucune recette trouvée')
+        throw new Error('No recipe found')
     }
 
     return mapMealToRecipe(meal)

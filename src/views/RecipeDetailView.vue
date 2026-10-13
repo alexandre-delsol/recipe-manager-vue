@@ -42,11 +42,11 @@ onMounted(async () => {
     <main class="mx-auto max-w-6xl px-4 py-8 text-stone-800 dark:text-stone-100 sm:px-6 lg:px-8">
 
         <h1 class="mb-8 text-3xl font-bold text-stone-800 dark:text-white">
-            Détail de la recette
+            Recipe Details
         </h1>
 
         <p v-if="loading" class="text-stone-500 dark:text-stone-400">
-            Chargement...
+            Loading...
         </p>
 
         <p v-else-if="errorMessage" class="rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-950 dark:text-red-300">
@@ -58,7 +58,7 @@ onMounted(async () => {
 
             <section>
                 <img class="w-full rounded-2xl object-cover shadow-[0_8px_20px_rgba(234,88,12,0.25)] transition-shadow duration-300 hover:shadow-[0_10px_30px_rgba(234,88,12,0.40)]"
-                    :src="recipe.thumbnail" :alt="`Photo de ${recipe.name}`">
+                    :src="recipe.thumbnail" :alt="`Photo of ${recipe.name}`">
 
                 <div class="mt-6">
                     <h2 class="text-3xl font-bold text-stone-800 dark:text-white">
@@ -89,7 +89,7 @@ onMounted(async () => {
             <section>
                 <h3
                     class="mb-4 border-b-2 border-orange-600 pb-2 text-2xl font-semibold text-stone-800 dark:text-white">
-                    Ingrédients
+                    Ingredients
                 </h3>
 
                 <ul class="grid gap-4 sm:grid-cols-2">
@@ -121,7 +121,7 @@ onMounted(async () => {
 
                 <a v-if="recipe.youtube" :href="recipe.youtube" target="_blank" rel="noopener noreferrer"
                     class="mt-6 inline-block rounded-lg bg-orange-600 px-5 py-3 font-medium text-white transition hover:bg-orange-700">
-                    Voir la recette sur YouTube
+                    Watch the recipe on YouTube
                 </a>
             </section>
 

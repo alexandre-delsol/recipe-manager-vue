@@ -79,7 +79,7 @@ onMounted(initializePage)
   <div class="w-full space-y-6 p-4">
     <section>
       <h2 class="mb-3 text-lg font-semibold">
-        Catégories
+        Category
       </h2>
 
       <div class="flex flex-wrap gap-2">
@@ -93,26 +93,26 @@ onMounted(initializePage)
 
     <section class="w-full sm:max-w-xs">
       <h2 class="mb-3 text-lg font-semibold">
-        Pays
+        Cuisine area
       </h2>
 
       <NSelect v-model:value="selectedArea" :options="areaOptions" @update:value="handleAreaChange"
-        placeholder="Sélectionner un pays" class="w-full" />
+        placeholder="Select a cuisine area" class="w-full" />
     </section>
     <NButton secondary @click="resetFilters">
-      Réinitialiser les filtres
+      Reset filters
     </NButton>
   </div>
 
-  <div v-if="searchState?.statut === 'chargement'" class="flex flex-wrap justify-center gap-4">
+  <div v-if="searchState?.status === 'loading'" class="flex flex-wrap justify-center gap-4">
     <RecipeCardSkeleton v-for="skeleton in skeletonCards" :key="skeleton" />
   </div>
 
-  <p v-else-if="searchState?.statut === 'erreur'" class="p-4">
+  <p v-else-if="searchState?.status === 'error'" class="p-4">
     {{ searchState.message }}
   </p>
 
-  <div v-else-if="searchState?.statut === 'succes'" class="flex flex-wrap justify-center gap-4">
+  <div v-else-if="searchState?.status === 'sucess'" class="flex flex-wrap justify-center gap-4">
     <RecipeCard v-for="recipe in searchState.recipes" :key="recipe.id" :recipe="recipe" />
   </div>
 

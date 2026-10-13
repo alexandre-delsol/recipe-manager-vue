@@ -12,7 +12,7 @@ const emit = defineEmits<{
 const rules: FormRules = {
   query: {
     required: true,
-    message: 'Veuillez saisir une recette',
+    message: 'Please enter a recipe name',
     trigger: ['input', 'blur']
   }
 }
@@ -48,7 +48,7 @@ async function handleSubmit() {
       <div class="flex w-full flex-col gap-2 sm:flex-row">
         <NInput
           v-model:value="model"
-          placeholder="Rechercher une recette..."
+          placeholder="Search recipes..."
           size="large"
           clearable
         />
@@ -58,7 +58,7 @@ async function handleSubmit() {
           size="large"
           attr-type="submit"
         >
-          Rechercher
+          Search
         </NButton>
       </div>
     </NFormItem>

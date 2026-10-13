@@ -13,10 +13,10 @@ const { history } = storeToRefs(recipeStore)
     <main class="mx-auto min-w-0 max-w-6xl px-4 py-8">
         <AppPanel>
         <p>
-            Nombre dans l'historique : {{ history.length }}
+            Recipes in history: {{ history.length }}
         </p>
         <p v-if="history.length === 0">
-            Aucune recette favorite.
+            No recipe in history.
         </p>
             <div v-show="history.length > 0" class="w-full overflow-x-auto">
                 <HistoryTable :recipes="history" />

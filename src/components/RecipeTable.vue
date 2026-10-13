@@ -17,15 +17,15 @@ const recipeStore = useRecipeStore()
 
 const columns: DataTableColumns<RecipeSummary> = [
     {
-        title: 'Nom',
+        title: 'Name',
         key: 'name',
     },
     {
-        title: 'Catégorie',
+        title: 'Category',
         key: 'category',
     },
     {
-        title: 'Origine',
+        title: 'Area',
         key: 'area',
     },
     {
@@ -56,7 +56,7 @@ const columns: DataTableColumns<RecipeSummary> = [
                                             h(NIcon, null, {
                                                 default: () => h(EyeOutline),
                                             }),
-                                        default: () => 'Voir',
+                                        default: () => 'View',
                                     },
                                 ),
                         },
@@ -74,7 +74,7 @@ const columns: DataTableColumns<RecipeSummary> = [
                                 h(NIcon, null, {
                                     default: () => h(TrashOutline),
                                 }),
-                            default: () => 'Supprimer',
+                            default: () => 'Delete',
                         },
                     ),
                 ],
@@ -85,12 +85,11 @@ const columns: DataTableColumns<RecipeSummary> = [
 
 function removeFavorite(id: string) {
     recipeStore.removeFavorite(id)
-    message.success('Recette retirée des favoris')
+    message.success('Recipe removed from favorites')
 }
 </script>
 
 <template>
-    <!-- Desktop / tablette -->
     <div class="hidden sm:block">
         <NDataTable
             :columns="columns"
@@ -99,7 +98,6 @@ function removeFavorite(id: string) {
         />
     </div>
 
-    <!-- Mobile -->
     <div class="space-y-3 sm:hidden">
         <div
             v-for="recipe in recipes"
@@ -127,8 +125,8 @@ function removeFavorite(id: string) {
                         type="primary"
                         secondary
                         circle
-                        aria-label="Voir la recette"
-                        title="Voir la recette"
+                        aria-label="View recipe"
+                        title="View recipe"
                     >
                         <template #icon>
                             <NIcon>
@@ -142,8 +140,8 @@ function removeFavorite(id: string) {
                     type="error"
                     secondary
                     circle
-                    aria-label="Supprimer des favoris"
-                    title="Supprimer des favoris"
+                    aria-label="Delete from the favorites"
+                    title="Delete from the favorites"
                     @click="removeFavorite(recipe.id)"
                 >
                     <template #icon>

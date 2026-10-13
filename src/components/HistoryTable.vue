@@ -16,32 +16,32 @@ const message = useMessage()
 const recipeStore = useRecipeStore()
 
 function formatVisitedAt(visitedAt: string): string {
-    return new Date(visitedAt).toLocaleString('fr-FR', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-    })
+    return new Date(visitedAt).toLocaleString('en-GB', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+})
 }
 
 function removeHistoryItem(id: string) {
     recipeStore.removeHistoryItem(id)
-    message.success('Recette retirée de l’historique')
+    message.success('Recipe removed from history')
 }
 
 const columns: DataTableColumns<RecipeHistoryItem> = [
     {
-        title: 'Nom',
+        title: 'Name',
         key: 'name',
     },
     {
-        title: 'Catégorie',
+        title: 'Category',
         key: 'category',
     },
     {
-        title: 'Origine',
+        title: 'Area',
         key: 'area',
     },
     {
-        title: 'Dernière visite',
+        title: 'Last visit',
         key: 'visitedAt',
         render(row) {
             return formatVisitedAt(row.visitedAt)
@@ -75,7 +75,7 @@ const columns: DataTableColumns<RecipeHistoryItem> = [
                                             h(NIcon, null, {
                                                 default: () => h(EyeOutline),
                                             }),
-                                        default: () => 'Voir',
+                                        default: () => 'View',
                                     },
                                 ),
                         },
@@ -93,7 +93,7 @@ const columns: DataTableColumns<RecipeHistoryItem> = [
                                 h(NIcon, null, {
                                     default: () => h(TrashOutline),
                                 }),
-                            default: () => 'Supprimer',
+                            default: () => 'Delete',
                         },
                     ),
                 ],
@@ -145,8 +145,8 @@ const columns: DataTableColumns<RecipeHistoryItem> = [
                         type="primary"
                         secondary
                         circle
-                        aria-label="Voir la recette"
-                        title="Voir la recette"
+                        aria-label="View recipe"
+                        title="View recipe"
                     >
                         <template #icon>
                             <NIcon>
@@ -160,8 +160,8 @@ const columns: DataTableColumns<RecipeHistoryItem> = [
                     type="error"
                     secondary
                     circle
-                    aria-label="Supprimer de l'historique"
-                    title="Supprimer de l'historique"
+                    aria-label="Delete from the history"
+                    title="Delete from the history"
                     @click="removeHistoryItem(recipe.id)"
                 >
                     <template #icon>

@@ -7,9 +7,9 @@ import type {
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 type SearchState =
-    | { statut: 'chargement' }
-    | { statut: 'succes'; recipes: RecipeSummary[] }
-    | { statut: 'erreur'; message: string }
+    | { status: 'loading' }
+    | { status: 'sucess'; recipes: RecipeSummary[] }
+    | { status: 'error'; message: string }
 
 export const useRecipeStore = defineStore('recipe', () => {
 
@@ -116,38 +116,38 @@ export const useRecipeStore = defineStore('recipe', () => {
     const searchState = ref<SearchState | null>(null)
 
     async function searchRecipes(filters: RecipeFilters) {
-        searchState.value = { statut: 'chargement' }
+        searchState.value = { status: 'loading' }
 
         try {
             const result = await fetchRecipes(filters)
 
             searchState.value = {
-                statut: 'succes',
+                status: 'sucess',
                 recipes: result
             }
         } catch (error) {
             if (error instanceof Error) {
                 searchState.value = {
-                    statut: 'erreur',
+                    status: 'error',
                     message: error.message
                 }
             }
         }
     }
     async function loadDefaultRecipes(count: number) {
-        searchState.value = { statut: 'chargement' }
+        searchState.value = { status: 'loading' }
 
         try {
             const recipes = await fetchDefaultRecipes(count)
 
             searchState.value = {
-                statut: 'succes',
+                status: 'sucess',
                 recipes
             }
         } catch (error) {
             if (error instanceof Error) {
                 searchState.value = {
-                    statut: 'erreur',
+                    status: 'error',
                     message: error.message
                 }
             }

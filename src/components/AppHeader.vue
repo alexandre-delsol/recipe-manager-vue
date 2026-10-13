@@ -15,19 +15,19 @@ const isMenuOpen = ref(false)
 const menuOptions = computed<MenuOption[]>(() => [
   {
     key: '/',
-    label: 'Accueil'
+    label: 'Home'
   },
   {
     key: '/recipes',
-    label: 'Recettes'
+    label: 'Recipes'
   },
   {
     key: '/library',
-    label: `Bibliothèque (${favorites.value.length})`
+    label: `Library (${favorites.value.length})`
   },
   {
     key: '/history',
-    label: `Historique (${history.value.length})`
+    label: `History (${history.value.length})`
   }
 ])
 
@@ -62,8 +62,8 @@ function handleMenuUpdate(key: string) {
           <template #2>
             <div class="flex h-full items-center justify-end">
               <button type="button" :aria-label="isDark
-                ? 'Activer le mode clair'
-                : 'Activer le mode sombre'
+                ? 'Switch to light mode'
+                : 'Switch to dark mode'
                 " class="rounded-lg p-2
                text-stone-600 transition
                hover:bg-orange-100 hover:text-orange-600
@@ -87,7 +87,7 @@ function handleMenuUpdate(key: string) {
       </div>
       <div class="flex items-center justify-between sm:hidden">
         <!-- Menu burger -->
-        <button type="button" :aria-label="isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'" class="rounded-lg p-2 text-stone-600 transition
+        <button type="button" :aria-label="isMenuOpen ? 'Close the menu' : 'Open the menu'" class="rounded-lg p-2 text-stone-600 transition
            hover:bg-orange-100 hover:text-orange-600
            dark:bg-stone-900
            dark:text-stone-300
@@ -101,8 +101,8 @@ function handleMenuUpdate(key: string) {
 
         <!-- Dark mode mobile -->
         <button type="button" :aria-label="isDark
-          ? 'Activer le mode clair'
-          : 'Activer le mode sombre'
+          ? 'Switch to light mode'
+          : 'Switch to dark mode'
           " class="rounded-lg p-2
            text-stone-600 transition
            hover:bg-orange-100 hover:text-orange-600
@@ -113,6 +113,7 @@ function handleMenuUpdate(key: string) {
           {{ isDark ? '☀️' : '🌙' }}
         </button>
       </div>
+
     </nav>
   </header>
 </template>

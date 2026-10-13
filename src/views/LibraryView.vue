@@ -13,13 +13,13 @@ const { favorites } = storeToRefs(recipeStore)
   <main class="mx-auto min-w-0 max-w-6xl px-4 py-8">
     <AppPanel>
     <h1 class="mb-8 text-3xl font-bold">
-      Ma bibliothèque
+      My Library
     </h1>
     <p>
-      Nombre de favoris : {{ favorites.length }}
+      Number of favorites: {{ favorites.length }}
     </p>
     <p v-if="favorites.length === 0">
-      Aucune recette favorite.
+      No favorite recipes yet.
     </p>
 
       <div v-show="favorites.length > 0" class="w-full overflow-x-auto">

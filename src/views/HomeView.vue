@@ -54,115 +54,78 @@ onMounted(loadInitialRecipe)
                 Recipe Manager
             </h1>
 
-            <p
-                class="mx-auto mt-4 max-w-2xl text-stone-600
-                       dark:text-stone-300"
-            >
-                Découvrez de nouvelles recettes, consultez leur détail
-                et gérez votre bibliothèque de recettes favorites.
+            <p class="mx-auto mt-4 max-w-2xl text-stone-600
+                       dark:text-stone-300">
+                Discover new recipes, explore their details, and manage your favorite recipes.
             </p>
         </section>
 
-        <!-- Premier chargement -->
-        <p
-            v-if="loading"
-            class="text-center text-stone-500 dark:text-stone-400"
-        >
-            Chargement...
+        <p v-if="loading" class="text-center text-stone-500 dark:text-stone-400">
+            Loading...
         </p>
 
-        <!-- Erreur -->
-        <p
-            v-else-if="errorMessage"
-            class="mx-auto max-w-xl rounded-lg bg-red-50 p-4
+        <p v-else-if="errorMessage" class="mx-auto max-w-xl rounded-lg bg-red-50 p-4
                    text-center text-red-700
-                   dark:bg-red-950 dark:text-red-300"
-        >
+                   dark:bg-red-950 dark:text-red-300">
             {{ errorMessage }}
         </p>
 
-        <!-- Recette -->
-        <section
-            v-else-if="recipe"
-            class="mx-auto max-w-4xl overflow-hidden rounded-2xl
+        <section v-else-if="recipe" class="mx-auto max-w-4xl overflow-hidden rounded-2xl
                    border border-stone-200 bg-white shadow-lg
-                   dark:border-stone-700 dark:bg-stone-900"
-        >
-            <img
-                class="h-64 w-full object-cover sm:h-80"
-                :src="recipe.thumbnail"
-                :alt="`Photo de ${recipe.name}`"
-            >
+                   dark:border-stone-700 dark:bg-stone-900">
+            <img class="h-64 w-full object-cover sm:h-80" :src="recipe.thumbnail" :alt="`Photo of ${recipe.name}`">
 
             <div class="p-6">
-                <div
-                    class="flex flex-col gap-4
-                           sm:flex-row sm:items-start sm:justify-between"
-                >
+                <div class="flex flex-col gap-4
+                           sm:flex-row sm:items-start sm:justify-between">
                     <div class="min-w-0">
-                        <h2
-                            class="text-3xl font-bold text-stone-800
-                                   dark:text-white"
-                        >
+                        <h2 class="text-3xl font-bold text-stone-800
+                                   dark:text-white">
                             {{ recipe.name }}
                         </h2>
 
                         <div class="mt-4 flex flex-wrap gap-3">
-                            <span
-                                class="rounded-full bg-orange-100 px-3 py-1
+                            <span class="rounded-full bg-orange-100 px-3 py-1
                                        text-sm font-medium text-orange-700
-                                       dark:bg-orange-950 dark:text-orange-300"
-                            >
+                                       dark:bg-orange-950 dark:text-orange-300">
                                 {{ recipe.category }}
                             </span>
 
-                            <span
-                                class="rounded-full bg-stone-100 px-3 py-1
+                            <span class="rounded-full bg-stone-100 px-3 py-1
                                        text-sm font-medium text-stone-700
-                                       dark:bg-stone-800 dark:text-stone-200"
-                            >
+                                       dark:bg-stone-800 dark:text-stone-200">
                                 {{ recipe.area }}
                             </span>
                         </div>
                     </div>
 
-                    <FavoriteButton
-                        :recipe="{
-                            id: recipe.id,
-                            name: recipe.name,
-                            thumbnail: recipe.thumbnail,
-                            category: recipe.category,
-                            area: recipe.area
-                        }"
-                    />
+                    <FavoriteButton :recipe="{
+                        id: recipe.id,
+                        name: recipe.name,
+                        thumbnail: recipe.thumbnail,
+                        category: recipe.category,
+                        area: recipe.area
+                    }" />
                 </div>
 
                 <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-                    <RouterLink
-                        :to="`/recipes/${recipe.id}`"
-                        class="inline-block rounded-lg bg-orange-600
+                    <RouterLink :to="`/recipes/${recipe.id}`" class="inline-block rounded-lg bg-orange-600
                                px-5 py-2.5 font-medium text-white
                                transition hover:bg-orange-700
-                               dark:hover:bg-orange-500"
-                    >
-                        Découvrir la recette
+                               dark:hover:bg-orange-500">
+                        View recipe details
                     </RouterLink>
 
-                    <button
-                        type="button"
-                        :disabled="loadingRandomRecipe"
-                        class="inline-block rounded-lg bg-orange-600
+                    <button type="button" :disabled="loadingRandomRecipe" class="inline-block rounded-lg bg-orange-600
                                px-5 py-2.5 font-medium text-white
                                transition hover:bg-orange-700
                                disabled:cursor-not-allowed
                                disabled:opacity-50
                                dark:hover:bg-orange-500
-                               cursor-pointer"
-                        @click="loadRandomRecipe"
-                    >
+                               cursor-pointer" @click="loadRandomRecipe">
                         {{ loadingRandomRecipe
-                            ? 'Chargement...'
-                            : '🎲 Une autre recette'
+                            ? 'Loading...'
+                            : '🎲 Another recipe'
                         }}
                     </button>
                 </div>
