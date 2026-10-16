@@ -8,6 +8,10 @@ The application uses **TheMealDB API** as its recipe data source and demonstrate
 
 [👉 Open Recipe Manager](https://recipe-manager-vue.vercel.app/)
 
+## Screenshot
+
+![Recipe](image.png)
+
 ## Features
 
 * 🔎 Search recipes by name
